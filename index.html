@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <!-- Google Fonts: Cormorant Garamond & Noto Serif TC & Bantayog -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/bantayog" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-orange: #D98A6C;
+      --primary-orange-dark: #c47658;
+      --morandi-sage: #8da399;
+      --bg-glass: rgba(255, 252, 249, 0.56);
+      --text-main: #4A3E3D;
+      --text-muted: rgba(74, 62, 61, 0.78);
+      --border-light: rgba(217, 138, 108, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Cormorant Garamond', 'Noto Serif TC', serif;
+      color: var(--text-main);
+      background-color: #2c2a27;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 手機版視覺優化：強制不換行類別 */
+    .no-wrap {
+      white-space: nowrap !important;
+      word-break: keep-all !important;
+    }
+
+    /* 全螢幕封面背景（搭配高質感婚禮背景備援圖） */
+    .hero-bg {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(to bottom, rgba(35, 28, 25, 0.18), rgba(35, 28, 25, 0.38)),
+        url('https://drive.google.com/thumbnail?id=1XhA4QvDb1dssYuJPaJ_6tRGqW-LSf6aJ&sz=w1920'),
+        url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      z-index: 0;
+      transform: scale(1.02);
+    }
+
+    /* 主容器：確保 V-Card 在全螢幕正中央 */
+    .main-wrapper {
+      position: relative;
+      z-index: 1;
+      min-height: 100dvh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    /* 垂直 V-Card 設計：半透明通透質感，可隱約看見底部封面照 */
+    .v-card {
+      width: 100%;
+      max-width: 400px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      box-shadow: 0 24px 48px rgba(42, 30, 25, 0.22);
+      padding: 32px 24px 26px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* V-Card 頂部暖橘漸層裝飾線 */
+    .v-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary-orange), #e7ab93);
+    }
+
+    /* 標題上方婚禮椅子精緻插圖 */
+    .chair-illustration {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 8px;
+      color: #B36547;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 2px 6px rgba(217, 138, 108, 0.25));
+    }
+
+    .sub-tagline {
+      font-size: clamp(0.76rem, 2.9vw, 0.86rem);
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--text-main);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    /* 主題標語：FIND YOUR TABEL */
+    .soul-slogan {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.62rem, 6.2vw, 2.05rem);
+      color: var(--primary-orange);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      text-shadow: 0 1px 10px rgba(255, 255, 255, 0.65);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 0 auto 20px;
+      width: 72%;
+    }
+
+    .divider span {
+      flex: 1;
+      height: 1px;
+      background: var(--border-light);
+    }
+
+    .divider i {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--primary-orange);
+    }
+
+    /* 查詢結果顯示區塊 (V-Card 內部半透明卡片) */
+    .result-box {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 16px;
+      padding: 24px 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 20px rgba(74, 62, 61, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    .result-guest-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      letter-spacing: 0.14em;
+      margin-bottom: 6px;
+    }
+
+    .result-guest-name {
+      font-size: clamp(1.25rem, 4.8vw, 1.5rem);
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    /* 桌號文字：移除實體按鈕背景，直接以暖橘色字體呈現於賓客姓名下方 */
+    .table-badge {
+      display: block;
+      font-family: 'Noto Serif TC', 'Cormorant Garamond', serif;
+      background: none;
+      color: var(--primary-orange);
+      font-size: clamp(1.42rem, 5.6vw, 1.85rem);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      padding: 2px 0 14px;
+      margin-bottom: 4px;
+    }
+
+    /* 歡迎小語：縮小字級並使用柔和灰色 */
+    .welcome-note {
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: #7c7573;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(217, 138, 108, 0.45);
+    }
+
+    /* 重新查詢按鈕：使用 #B36547 磚紅暖棕色 */
+    .btn-reopen {
+      width: 100%;
+      padding: 13px 20px;
+      border: none;
+      background-color: #B36547;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 0.94rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(179, 101, 71, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.25s ease, filter 0.25s ease;
+      margin-bottom: 22px;
+    }
+
+    .btn-reopen:hover, .btn-reopen:active {
+      filter: brightness(1.06);
+      box-shadow: 0 8px 20px rgba(179, 101, 71, 0.45);
+      transform: translateY(-1px);
+    }
+
+    /* 小卡最下方新人名字與日期小字標註 */
+    .card-footer-signature {
+      padding-top: 14px;
+      border-top: 1px solid rgba(74, 62, 61, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .couple-names-small {
+      font-size: clamp(0.84rem, 3.4vw, 0.96rem);
+      font-weight: 600;
+      color: var(--text-main);
+      letter-spacing: 0.04em;
+    }
+
+    .couple-names-small .amp {
+      color: var(--text-main);
+      font-style: italic;
+      margin: 0 3px;
+    }
+
+    .couple-names-small .zh-name {
+      font-size: 0.88em;
+      font-weight: 400;
+      opacity: 0.85;
+    }
+
+    .wedding-date-small {
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+    }
+
+    /* 進入頁面彈窗 Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 26, 23, 0.65);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 370px;
+      background: rgba(255, 251, 247, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 18px;
+      padding: 30px 24px 24px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.28);
+      border-top: 4px solid var(--primary-orange);
+      transform: translateY(18px) scale(0.97);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      text-align: center;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.68rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--primary-orange);
+      margin-bottom: 4px;
+    }
+
+    .modal-subtitle {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+      letter-spacing: 0.08em;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+
+    /* 中英雙語欄位標籤 */
+    .bilingual-label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-main);
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .bilingual-label .en {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.16em;
+      color: var(--primary-orange);
+      font-weight: 600;
+    }
+
+    .guest-input {
+      width: 100%;
+      padding: 13px 15px;
+      font-family: inherit;
+      font-size: 1rem;
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(217, 138, 108, 0.5);
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .guest-input:focus {
+      border-color: var(--primary-orange);
+      box-shadow: 0 0 0 3px rgba(217, 138, 108, 0.22);
+    }
+
+    .error-msg {
+      color: #b84438;
+      font-size: 0.84rem;
+      margin-top: 8px;
+      min-height: 20px;
+      text-align: left;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 13px 20px;
+      background: linear-gradient(135deg, var(--primary-orange), var(--primary-orange-dark));
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(217, 138, 108, 0.36);
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .btn-submit:active {
+      transform: scale(0.98);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 全螢幕封面背景 -->
+  <div class="hero-bg" aria-hidden="true"></div>
+
+  <!-- 主視覺垂直 V-Card -->
+  <main class="main-wrapper">
+    <section class="v-card">
+      <!-- 標題上方粗線條婚禮椅子插圖 -->
+      <div class="chair-illustration" aria-hidden="true">
+        <svg width="46" height="46" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+          <!-- 簡約粗線條椅背外框 -->
+          <path d="M15 8h18v18H15z"/>
+          <!-- 椅背垂直粗木條 -->
+          <line x1="21" y1="8" x2="21" y2="26"/>
+          <line x1="27" y1="8" x2="27" y2="26"/>
+          <!-- 厚實椅座 -->
+          <path d="M12 26h24l2 5H10l2-5z" fill="currentColor" fill-opacity="0.18"/>
+          <!-- 四隻粗線條椅腳與橫桿 -->
+          <line x1="13" y1="31" x2="12" y2="42"/>
+          <line x1="35" y1="31" x2="36" y2="42"/>
+          <line x1="18" y1="31" x2="18" y2="40"/>
+          <line x1="30" y1="31" x2="30" y2="40"/>
+          <line x1="12.5" y1="36.5" x2="35.5" y2="36.5"/>
+        </svg>
+      </div>
+
+      <p class="sub-tagline no-wrap" style="margin-bottom: 14px;">WEDDING RECEPTION</p>
+
+      <div class="divider" aria-hidden="true">
+        <span></span><i></i><span></span>
+      </div>
+
+      <!-- 座位結果顯示卡片 -->
+      <div class="result-box" id="resultBox">
+        <p class="result-guest-label no-wrap">賓客姓名 GUEST</p>
+        <p class="result-guest-name no-wrap" id="displayGuestName">尚未查詢</p>
+        
+        <div class="table-badge no-wrap" id="displayTableNumber">請輸入姓名查詢</div>
+        
+        <p class="welcome-note" id="displayWelcomeNote">
+          誠摯歡迎您的蒞臨，請點擊下方按鈕輸入您的姓名以查詢專屬席次。
+        </p>
+      </div>
+
+      <button type="button" class="btn-reopen no-wrap" id="openModalBtn">
+        查詢其他賓客 · SEARCH AGAIN
+      </button>
+
+      <!-- 新人名字與日期放在小卡最下方小字標註 -->
+      <footer class="card-footer-signature">
+        <p class="couple-names-small no-wrap">
+          Bo Cian <span class="zh-name">(柏謙)</span>
+          <span class="amp">&amp;</span>
+          Yi Hsuan <span class="zh-name">(怡萱)</span>
+        </p>
+        <p class="wedding-date-small no-wrap">2026年12月20日</p>
+      </footer>
+    </section>
+  </main>
+
+  <!-- 進入頁面彈出的輸入名字小卡 -->
+  <div class="modal-overlay active" id="searchModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <h3 class="modal-title no-wrap" id="modalTitle">FIND YOUR TABEL</h3>
+      <p class="modal-subtitle no-wrap">Bo Cian &amp; Yi Hsuan · 2026.12.20</p>
+
+      <form id="seatingForm">
+        <div class="form-group">
+          <!-- 中英雙語欄位標籤 -->
+          <label for="guestNameInput" class="bilingual-label no-wrap">
+            <span>姓名 <span class="en">NAME</span></span>
+          </label>
+          <input 
+            type="text" 
+            id="guestNameInput" 
+            class="guest-input" 
+            placeholder="請輸入您的全名 / Enter your name" 
+            autocomplete="off" 
+            required 
+          />
+
+          <p class="error-msg" id="errorMsg"></p>
+        </div>
+
+        <button type="submit" class="btn-submit no-wrap">
+          查詢座位 · FIND SEAT
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let guestList = [];
+
+    // 將「以桌號為單位」的 JSON 結構攤平為查詢清單（同時相容單人格式）
+    function flattenTablesData(data) {
+      const flattened = [];
+      if (data && Array.isArray(data.tables)) {
+        data.tables.forEach(group => {
+          if (Array.isArray(group.guests)) {
+            group.guests.forEach(guestName => {
+              if (typeof guestName === 'string' && guestName.trim()) {
+                flattened.push({
+                  name: guestName.trim(),
+                  table: group.table,
+                  note: group.note || ''
+                });
+              }
+            });
+          }
+        });
+      } else if (data && Array.isArray(data.guests)) {
+        return data.guests;
+      }
+      return flattened;
+    }
+
+    // 從同目錄讀取外部 guests.json 檔案
+    async function loadGuestsData() {
+      try {
+        const response = await fetch('./guests.json', { cache: 'no-store' });
+        if (!response.ok) throw new Error('無法讀取賓客名單');
+        const data = await response.json();
+        guestList = flattenTablesData(data);
+      } catch (err) {
+        console.error('載入 guests.json 失敗:', err);
+        errorMsg.textContent = '名單載入失敗，請確認 guests.json 已上傳至同一資料夾。';
+      }
+    }
+
+    const searchModal = document.getElementById('searchModal');
+    const seatingForm = document.getElementById('seatingForm');
+    const guestNameInput = document.getElementById('guestNameInput');
+    const errorMsg = document.getElementById('errorMsg');
+    const openModalBtn = document.getElementById('openModalBtn');
+
+    const displayGuestName = document.getElementById('displayGuestName');
+    const displayTableNumber = document.getElementById('displayTableNumber');
+    const displayWelcomeNote = document.getElementById('displayWelcomeNote');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadGuestsData();
+      setTimeout(() => guestNameInput.focus(), 250);
+    });
+
+    // 開啟小卡彈窗
+    openModalBtn.addEventListener('click', () => {
+      errorMsg.textContent = '';
+      guestNameInput.value = '';
+      searchModal.classList.add('active');
+      setTimeout(() => guestNameInput.focus(), 200);
+    });
+
+    // 點擊遮罩背景關閉彈窗
+    searchModal.addEventListener('click', (e) => {
+      if (e.target === searchModal) {
+        searchModal.classList.remove('active');
+      }
+    });
+
+    // 處理查詢表單送出
+    seatingForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const rawInput = guestNameInput.value.trim();
+      if (!rawInput) return;
+
+      const normalizedQuery = rawInput.toLowerCase().replace(/\s+/g, '');
+      const matchedGuest = guestList.find(g => 
+        g.name.toLowerCase().replace(/\s+/g, '') === normalizedQuery
+      );
+
+      if (matchedGuest) {
+        errorMsg.textContent = '';
+        displayGuestName.textContent = matchedGuest.name;
+        displayTableNumber.textContent = matchedGuest.table;
+        displayWelcomeNote.textContent = matchedGuest.note || '歡迎入座！感謝您前來見證我們的幸福時刻。';
+        searchModal.classList.remove('active');
+      } else {
+        errorMsg.textContent = '查無此姓名，請確認輸入是否正確或洽詢現場招待人員。';
+      }
+    });
+  </script>
+</body>
+</html>
